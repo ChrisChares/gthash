@@ -1,0 +1,9 @@
+{
+  "name": "geotemporalhash",
+  "version": "0.1.0",
+  "description": "A hash of time and space on Earth with variable precision.",
+  "main": "index.ts",
+  "author": "Chris Chares",
+  "license": "MIT",
+  "private": false
+}
