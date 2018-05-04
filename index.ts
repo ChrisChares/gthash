@@ -1,7 +1,21 @@
-export interface Input {
+export interface HashInput {
   latitude: number;
   longitude: number;
   timestamp: number;
+}
+
+export interface HashOutput extends HashInput {
+  latitudeError: number;
+  longitudeError: number;
+  timestampError: number;
+}
+
+export enum Precision {
+  Low = 15,
+  Mid = 21,
+  High = 30,
+  // Millisecond and centimeter (although currently nanometer) precision 
+  Exact = 36
 }
 
 export interface ValueRange {
@@ -9,64 +23,31 @@ export interface ValueRange {
   max: number;
 }
 
-const LatitudeRange: ValueRange = {
+export const LatitudeRange: ValueRange = {
   min: -90.0,
   max: 90
 };
 
-const LongitudeRange: ValueRange = {
+export const LongitudeRange: ValueRange = {
   min: -180,
   max: 180
 };
 
 // A million years before and after the start of the Unix Epoch
-const timeRadius = 31536000000000;
-const TimeStampRange: ValueRange = {
+const timeRadius = 60 * 60 * 24 * 365 * 1000000;
+export const TimeStampRange: ValueRange = {
   min: -1 * timeRadius,
   max: timeRadius
 };
 
-// mayflower landing
-// const input: Input = {
-//   latitude: 41.9584367,
-//   longitude: -70.6619798,
-//   timestamp: -11017900800
-// };
 
-// Roanoke
-// const input: Input = {
-//   latitude: 35.8897,
-//   longitude: -75.6615,
-//   timestamp: -12149395200
-// }
-
-// Siege of bastogne
-const input: Input = {
-  latitude: 50.0,
-  longitude: 5.7214,
-  timestamp: -791596800
-};
-
-// hitler kills himself
-// const input: Input = {
-//   latitude: 52.5127,
-//   longitude: 13.3811,
-//   timestamp: -778636800
-// };
-
-// 52.5127° N, 13.3811° E
-
-
-const highOrLow = (min: number, max: number, value: number): number => {
+export const highOrLow = (min: number, max: number, value: number): number => {
   // Is it in the top or bottom half of the range
-  if ( value > ((min + max) / 2) ) {
-    return 1;
-  } else {
-    return 0;
-  }
+  if ( value > ((min + max) / 2) ) { return 1; } 
+  else { return 0; }
 }
 
-const calculateBits = (range: ValueRange, value: number, precision: number): string => {
+export const calculateBits = (range: ValueRange, value: number, precision: number): string => {
   let mutableRange = {... range};
   let bits = '';
 
@@ -92,7 +73,7 @@ const calculateBits = (range: ValueRange, value: number, precision: number): str
   return bits;
 }
 
-export const calculateHash = (input: Input, precision: number): string => {
+export const encodeHash = (input: HashInput, precision: number|Precision): string => {
   const bitPrecision = Math.ceil((precision / 3) * 6)
 
   const latBits = calculateBits(LatitudeRange, input.latitude, bitPrecision);
@@ -113,17 +94,60 @@ export const calculateHash = (input: Input, precision: number): string => {
   return base64;
 };
 
-const reverseHash = (hash: string): Input => {
-  const buff = new Buffer(hash);
 
+export const decodeBinaryString = (bits: string, range: ValueRange): [number, number] => {
+  let mutableRange = {... range};
 
+  for (let i=0; i<bits.length; i++) {
+    const bit = bits.charAt(i);
+    if ( bit === '1') {
+      mutableRange = {
+        min: (mutableRange.min + mutableRange.max) / 2,
+        max: mutableRange.max
+      }
+    } else {
+      mutableRange = {
+        min: mutableRange.min,
+        max: (mutableRange.min + mutableRange.max) / 2
+      }
+    }
+  }
 
+  const error = (mutableRange.max - mutableRange.min) / 2;
+
+  return [mutableRange.min + error, error];
+}
+
+export const decodeHash = (hash: string): HashOutput => {
+  const buf = Buffer.from(hash, 'base64'); 
+  const nums = Uint8Array.from(buf);
+
+  const binaryString = nums.reduce((sum: string, next: number): string => {
+    for ( let i=5; i>= 0; i--) { sum += (next >> i) & 1 }
+    return sum
+  }, '');
+
+  let latBits: string = '';
+  let longBits: string = '';
+  let timeBits: string = '';
+
+  for (let i=0; i<binaryString.length; i++) {
+    switch ( i % 3 ) {
+      case 0: latBits += binaryString.charAt(i); break;
+      case 1: longBits += binaryString.charAt(i); break;
+      case 2: timeBits += binaryString.charAt(i); break;
+    }
+  }
+
+  const [latitude, latitudeError] = decodeBinaryString(latBits, LatitudeRange);
+  const [longitude, longitudeError] = decodeBinaryString(longBits, LongitudeRange);
+  const [timestamp, timestampError] = decodeBinaryString(timeBits, TimeStampRange);
 
   return {
-    latitude: 69,
-    longitude: 69,
-    timestamp: 69
+    latitude, latitudeError,
+    longitude, longitudeError,
+    timestamp, timestampError
   }
 };
 
-console.log(calculateHash(input, 15));
+// console.log(calculateHash(input, 15));
