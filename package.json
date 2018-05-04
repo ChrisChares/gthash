@@ -3,7 +3,15 @@
   "version": "0.1.0",
   "description": "A hash of time and space on Earth with variable precision.",
   "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
   "author": "Chris Chares",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "devDependencies": {
+    "@types/node": "^9.6.11",
+    "ts-node": "^6.0.2",
+    "typescript": "^2.8.3"
+  }
 }
