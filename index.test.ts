@@ -93,8 +93,8 @@ describe('Precision', () => {
       // ~1m precision
       expect(decoded.latitude).toBeCloseTo(input.latitude, 5);
       expect(decoded.longitude).toBeCloseTo(input.longitude, 5);
-      // 1ms precision
-      expect(decoded.timestamp).toBeCloseTo(input.timestamp, 3);
+      // 100ms precision
+      expect(decoded.timestamp).toBeCloseTo(input.timestamp, 1);
     }
   });
 
@@ -102,9 +102,9 @@ describe('Precision', () => {
     for ( let input of inputs) {
       const hash = encodeHash(input, Precision.Mid);
       const decoded = decodeHash(hash);
-      // ~1km precision
-      expect(decoded.latitude).toBeCloseTo(input.latitude, 2);
-      expect(decoded.longitude).toBeCloseTo(input.longitude, 2);
+      // ~1m precision
+      expect(decoded.latitude).toBeCloseTo(input.latitude, 5);
+      expect(decoded.longitude).toBeCloseTo(input.longitude, 5);
       // 1m precision
       expect(decoded.timestampError).toBeLessThan(60);
     }
@@ -114,9 +114,9 @@ describe('Precision', () => {
     for ( let input of inputs) {
       const hash = encodeHash(input, Precision.Low);
       const decoded = decodeHash(hash);
-      // ~11km precision
-      expect(decoded.latitude).toBeCloseTo(input.latitude, 1);
-      expect(decoded.longitude).toBeCloseTo(input.longitude, 1);
+      // ~1km precision
+      expect(decoded.latitude).toBeCloseTo(input.latitude, 2);
+      expect(decoded.longitude).toBeCloseTo(input.longitude, 2);
       // 1 month precision
       expect(decoded.timestampError).toBeLessThan(60 * 60 * 24 * 30);
     }

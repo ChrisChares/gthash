@@ -11,11 +11,14 @@ export interface HashOutput extends HashInput {
 }
 
 export enum Precision {
-  Low = 15,
+  // 1km precision and one month precision.  Ancient historical use
+  Low = 12,
+  // 1m and minute precision.  Historical use
   Mid = 21,
-  High = 30,
-  // Millisecond and centimeter (although currently nanometer) precision 
-  Exact = 36
+  // 1m and 100 ms precision.  Aimed at general use
+  High = 24,
+  // picosecond and nonmeter precision 
+  Exact = 30
 }
 
 export interface ValueRange {
@@ -33,8 +36,8 @@ export const LongitudeRange: ValueRange = {
   max: 180
 };
 
-// A million years before and after the start of the Unix Epoch
-const timeRadius = 60 * 60 * 24 * 365 * 1000000;
+// A hundred thousand years before and after the start of the Unix Epoch
+const timeRadius = 60 * 60 * 24 * 365 * 100000;
 export const TimeStampRange: ValueRange = {
   min: -1 * timeRadius,
   max: timeRadius
