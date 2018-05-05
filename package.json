@@ -8,6 +8,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "ts-node index.ts",
+    "build": "tsc",
     "test": "jest"
   },
   "jest": {

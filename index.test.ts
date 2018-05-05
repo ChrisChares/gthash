@@ -2,8 +2,8 @@ import {
   LatitudeRange,
   LongitudeRange,
   TimeStampRange,
-  highOrLow,
-  calculateBits,
+  _highOrLow,
+  _calculateBits,
   encodeHash,
   decodeHash,
   HashInput,
@@ -54,12 +54,12 @@ describe('Test ranges', () => {
 
 describe('Test individual functions', () => {
   test('highOrLow', () => {
-    expect(highOrLow(0,10,3)).toEqual(0);
-    expect(highOrLow(3,7,6)).toEqual(1);
+    expect(_highOrLow(0,10,3)).toEqual(0);
+    expect(_highOrLow(3,7,6)).toEqual(1);
   })
   test('calculateBits', () => {
-    expect(calculateBits({min: 0, max: 10}, 4, 3)).toEqual('011')
-    expect(calculateBits({min: -10, max: 10}, 4, 3)).toEqual('101')
+    expect(_calculateBits({min: 0, max: 10}, 4, 3)).toEqual('011')
+    expect(_calculateBits({min: -10, max: 10}, 4, 3)).toEqual('101')
   });
   test('decodeHash', () => {
     // console.log(decodeHash('Iy07LzspJQAqFCkHJAka'));

@@ -43,45 +43,18 @@ export const TimeStampRange: ValueRange = {
   max: timeRadius
 };
 
-
-export const highOrLow = (min: number, max: number, value: number): number => {
-  // Is it in the top or bottom half of the range
-  if ( value > ((min + max) / 2) ) { return 1; } 
-  else { return 0; }
-}
-
-export const calculateBits = (range: ValueRange, value: number, precision: number): string => {
-  let mutableRange = {... range};
-  let bits = '';
-
-  let i = 0;
-  while(i < precision) {
-    const result = highOrLow(mutableRange.min, mutableRange.max, value);
-
-    if (result) {
-      mutableRange = {
-        min: (mutableRange.min + mutableRange.max) / 2,
-        max: mutableRange.max
-      }
-    } else {
-      mutableRange = {
-        min: mutableRange.min,
-        max: (mutableRange.min + mutableRange.max) / 2,
-      }
-    }
-
-    i++;
-    bits += result
-  }
-  return bits;
-}
-
+/**
+ * Encode HashInput -> string.
+ * @param {HashInput} input
+ * @param {number|Precision} precision - Number of characters in resulting hash
+ * @returns string - the hash
+ */
 export const encodeHash = (input: HashInput, precision: number|Precision): string => {
   const bitPrecision = Math.ceil((precision / 3) * 6)
 
-  const latBits = calculateBits(LatitudeRange, input.latitude, bitPrecision);
-  const longBits = calculateBits(LongitudeRange, input.longitude, bitPrecision);
-  const timeBits = calculateBits(TimeStampRange, input.timestamp, bitPrecision);
+  const latBits = _calculateBits(LatitudeRange, input.latitude, bitPrecision);
+  const longBits = _calculateBits(LongitudeRange, input.longitude, bitPrecision);
+  const timeBits = _calculateBits(TimeStampRange, input.timestamp, bitPrecision);
 
   let interleavedBits = '';
   for ( let i=0; i<latBits.length; i++) {
@@ -97,30 +70,11 @@ export const encodeHash = (input: HashInput, precision: number|Precision): strin
   return base64;
 };
 
-
-export const decodeBinaryString = (bits: string, range: ValueRange): [number, number] => {
-  let mutableRange = {... range};
-
-  for (let i=0; i<bits.length; i++) {
-    const bit = bits.charAt(i);
-    if ( bit === '1') {
-      mutableRange = {
-        min: (mutableRange.min + mutableRange.max) / 2,
-        max: mutableRange.max
-      }
-    } else {
-      mutableRange = {
-        min: mutableRange.min,
-        max: (mutableRange.min + mutableRange.max) / 2
-      }
-    }
-  }
-
-  const error = (mutableRange.max - mutableRange.min) / 2;
-
-  return [mutableRange.min + error, error];
-}
-
+/**
+ * Decode string -> HashOutput.
+ * @param {hash} string - A geotemporal hash string
+ * @returns {HashOutput}
+ */
 export const decodeHash = (hash: string): HashOutput => {
   const buf = Buffer.from(hash, 'base64'); 
   const nums = Uint8Array.from(buf);
@@ -142,9 +96,9 @@ export const decodeHash = (hash: string): HashOutput => {
     }
   }
 
-  const [latitude, latitudeError] = decodeBinaryString(latBits, LatitudeRange);
-  const [longitude, longitudeError] = decodeBinaryString(longBits, LongitudeRange);
-  const [timestamp, timestampError] = decodeBinaryString(timeBits, TimeStampRange);
+  const [latitude, latitudeError] = _decodeBinaryString(latBits, LatitudeRange);
+  const [longitude, longitudeError] = _decodeBinaryString(longBits, LongitudeRange);
+  const [timestamp, timestampError] = _decodeBinaryString(timeBits, TimeStampRange);
 
   return {
     latitude, latitudeError,
@@ -153,4 +107,57 @@ export const decodeHash = (hash: string): HashOutput => {
   }
 };
 
-// console.log(calculateHash(input, 15));
+export const _highOrLow = (min: number, max: number, value: number): number => {
+  // Is it in the top or bottom half of the range
+  if ( value > ((min + max) / 2) ) { return 1; } 
+  else { return 0; }
+}
+
+export const _calculateBits = (range: ValueRange, value: number, precision: number): string => {
+  let mutableRange = {... range};
+  let bits = '';
+
+  let i = 0;
+  while(i < precision) {
+    const result = _highOrLow(mutableRange.min, mutableRange.max, value);
+
+    if (result) {
+      mutableRange = {
+        min: (mutableRange.min + mutableRange.max) / 2,
+        max: mutableRange.max
+      }
+    } else {
+      mutableRange = {
+        min: mutableRange.min,
+        max: (mutableRange.min + mutableRange.max) / 2,
+      }
+    }
+
+    i++;
+    bits += result
+  }
+  return bits;
+}
+
+export const _decodeBinaryString = (bits: string, range: ValueRange): [number, number] => {
+  let mutableRange = {... range};
+
+  for (let i=0; i<bits.length; i++) {
+    const bit = bits.charAt(i);
+    if ( bit === '1') {
+      mutableRange = {
+        min: (mutableRange.min + mutableRange.max) / 2,
+        max: mutableRange.max
+      }
+    } else {
+      mutableRange = {
+        min: mutableRange.min,
+        max: (mutableRange.min + mutableRange.max) / 2
+      }
+    }
+  }
+
+  const error = (mutableRange.max - mutableRange.min) / 2;
+
+  return [mutableRange.min + error, error];
+}
