@@ -1,8 +1,15 @@
 {
   "name": "gthash",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Chris Chares",
-  "keywords": ["geohash", "geotemporal", "hash", "gthash", "spacial", "temporal"],
+  "keywords": [
+    "geohash",
+    "geotemporal",
+    "hash",
+    "gthash",
+    "spacial",
+    "temporal"
+  ],
   "description": "Geotemporal hashing function based on geohash and z-order curves.  The resulting string hash encodes time and space on Earth with variable precision and all other characteristics of a geohash. Comes with Typescript definitions",
   "homepage": "https://github.com/ChrisChares/gthash/tree/master",
   "repository": "github:chrischares/gthash",
@@ -12,7 +19,7 @@
   "license": "MIT",
   "private": false,
   "main": "dist/index.js",
-  "types" : "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "start": "ts-node index.ts",
     "build": "tsc",
