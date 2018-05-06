@@ -24,7 +24,7 @@
     "start": "ts-node index.ts",
     "build": "tsc",
     "test": "jest",
-    "coverage": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "coverage": "jest --coverage --coverageReporters=text-lcov | coveralls"
   },
   "jest": {
     "roots": [
