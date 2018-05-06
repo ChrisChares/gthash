@@ -23,7 +23,8 @@
   "scripts": {
     "start": "ts-node index.ts",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "jest": {
     "roots": [
@@ -45,6 +46,7 @@
   "devDependencies": {
     "@types/jest": "^22.2.3",
     "@types/node": "^9.6.11",
+    "coveralls": "^3.0.1",
     "jest": "^22.4.3",
     "ts-jest": "^22.4.4",
     "ts-node": "^6.0.2",
