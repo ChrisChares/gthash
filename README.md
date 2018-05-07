@@ -27,7 +27,7 @@ $ yarn add geohash
 ```typescript
 import { encodeHash, decodeHash } from 'gthash';
 
-// Apollo 11 launch
+// Apollo 11 launch - July 16th 1969, Cape Canaveral, FL 
 const hash = encodeHash({
   latitude: 28.5620
   longitude: -80.57721,
@@ -35,6 +35,7 @@ const hash = encodeHash({
 });
 
 console.log(hash); // IykrGTkfLT8LBzonFg4qMhkjKBsHBAEj
+const original = decodeHash(hash);
 ```
 
 ### Features
