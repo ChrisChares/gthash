@@ -34,6 +34,12 @@ const inputs: HashInput[] = [
     latitude: 28.5620,
     longitude: -80.57721,
     timestamp: -14601600
+  },
+  // Woodstock begins
+  {
+    latitude: 41.477525,
+    longitude: -74.36358,
+    timestamp: -12009600
   }
 ];
 

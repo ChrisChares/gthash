@@ -29,14 +29,22 @@ import { encodeHash, decodeHash } from 'gthash';
 
 // Apollo 11 launch - July 16th 1969, Cape Canaveral, FL 
 const hash = encodeHash({
-  latitude: 28.5620
+  latitude: 28.5620,
   longitude: -80.57721,
   timestamp: -14601600
 });
-
 console.log(hash); // IykrGTkfLT8LBzonFg4qMhkjKBsHBAEj
-const original = decodeHash(hash);
+
+// Woodstock Music & Art Fair begins - August 15th, Wallkill, New York
+const hash2 = encodeHash({
+  latitude: 41.477525,
+  longitude: -74.36358,
+  timestamp: -12009600
+});
+console.log(hash2); // Iy05Oy0vPx05CAIGMhI7AykoCiERMSkx
 ```
+
+Note how hashes of events that are similar in time and space share a similar prefix.
 
 ### Features
 
