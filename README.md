@@ -1,4 +1,7 @@
 [![Build Status](https://travis-ci.com/ChrisChares/gthash.svg?branch=master)](https://travis-ci.com/ChrisChares/gthash)
+[![Coverage Status](https://coveralls.io/repos/github/ChrisChares/gthash/badge.svg?branch=master)](https://coveralls.io/github/ChrisChares/gthash?branch=master)
+![npm](https://img.shields.io/npm/v/gthash.svg)
+![npm](https://img.shields.io/npm/dw/gthash.svg)
 
 # gthash
 Geotemporal hashing function based on geohash and z-order curves.  The resulting string hash encodes time and space on Earth with variable precision and all other characteristics of a geohash.  Comes with Typescript definitions.
