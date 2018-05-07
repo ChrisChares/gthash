@@ -4,7 +4,22 @@
 ![npm](https://img.shields.io/npm/dw/gthash.svg)
 
 # gthash
-Geotemporal hashing function based on geohash and z-order curves.  The resulting string hash encodes time and space on Earth with variable precision and all other characteristics of a geohash.  Comes with Typescript definitions.
+Geotemporal hashing function based on z-order curves and extending the geohash concept.  The resulting string encodes time and space on Earth with variable precision and all other characteristics of a geohash.  Comes with Typescript definitions.
+
+### Installation
+
+This is a [node](https://nodejs.org/en/) module available though [the npm registry](https://www.npmjs.com/package/gthash)
+
+Installation is done via `npm` or `yarn`
+
+```bash
+$ npm install gthash --save
+
+# OR
+
+$ yarn add geohash
+
+```
 
 ### Getting Started
 
@@ -19,16 +34,12 @@ const hash = encodeHash({
 
 ```
 
-### Benefits
+### Features
 
 + Variable precision
 + Places that are similar in space and time will share a similar prefix
-+ Typescript
-+ No prod dependencies
-
-### Drawbacks
-
-All the same as a geohash
++ Typescript definitions
++ 100% test coverage
 
 ### Contributing
 
