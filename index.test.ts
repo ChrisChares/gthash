@@ -29,11 +29,11 @@ const inputs: HashInput[] = [
     longitude: 5.7214,
     timestamp: -791596800
   },
-  // hitler kills himself
+  // Apollo 11 Launch
   {
-    latitude: 52.5127,
-    longitude: 13.3811,
-    timestamp: -778636800
+    latitude: 28.5620,
+    longitude: -80.57721,
+    timestamp: -14601600
   }
 ];
 
